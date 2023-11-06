@@ -8,7 +8,6 @@ ruta = ""
 def nuevo():
     """Borra todo el texto del cuadro
        y vacia la ruta"""
-    
     # Borramos el texto de la pantalla
     cuadro_texto.delete("1.0","end")
 
@@ -16,11 +15,13 @@ def nuevo():
     global ruta 
     ruta = ""
 
+    # En caso de que haya cambiado, retomamos el titulo original
+    root.title("Editor de texto")
+
 def guardar():
     """Guarda el contenido del archivo actual,
        si este no existe, se llama a guardar_como
        para crear un nuevo archivo """
-    
     # Llamamos a la variable global
     global ruta 
 
@@ -40,23 +41,19 @@ def guardar():
 def guardar_como():
     """Guarda el texto en un archivo dentro de la carpeta actual
        asi como la ruta de este"""
-    
     # Llamamos a la funcion global y le asignamos la ruta con la 
     # que guardaremos el archivo
     global ruta
     archivo = filedialog.asksaveasfile(title="Guardar como",mode="w+",defaultextension=".txt")
     ruta = archivo.name
-
-    if archivo is not None:
-        # Comprobamos si se le a asiganado un nombre al archivo
-        # si es asi, proseguimos
-        texto = cuadro_texto.get("1.0","end")
-        archivo.write(texto)
+    # extraemos el texto de la ventana y lo escribirmo en el archivo
+    texto = cuadro_texto.get("1.0","end")
+    archivo.write(texto)
 
 def abrir_archivo():
     """Busca los archivo en formato txt para
        despues abrirlo en la interfaz de texto"""
-    archivo = filedialog.askopenfile(mode="r", filetypes=[("Archivos de texto", "*.txt"),("Archivos","*.*")])
+    archivo = filedialog.askopenfile(mode="r", filetypes=[("Archivos de texto", "*.txt")])
    
     # llamamos a la variable global y se asignamos la ruta del archivo
     global ruta
@@ -67,12 +64,16 @@ def abrir_archivo():
     # e insertamos el contenido del archivo
     cuadro_texto.delete("1.0","end") 
     cuadro_texto.insert("1.0",contenido) 
+    
+    # Cambiamos el titulo de la ventana principal
+    root.title(ruta+"Editor de texto")
 
 # Creamos la ventana principal
 root = tk.Tk()
 # Le indicamos el titulo asi como las dimensiones de esta
 root.title("Editor de texto")
 root.geometry("600x600")
+root.resizable(0,0)
 # Creamos una barra de menú 
 menuBar = tk.Menu(root)
 # la insertamos en nuestra ventana principal 
